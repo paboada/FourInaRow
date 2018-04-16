@@ -7,25 +7,55 @@ rule "Imprimir"
 		Celda (i == 0, j == 0, $v1: valor)
 		Celda (i == 0, j == 1, $v2: valor)
 		Celda (i == 0, j == 2, $v3: valor)
-		Celda (i == 1, j == 0, $v4: valor)
-		Celda (i == 1, j == 1, $v5: valor)
-		Celda (i == 1, j == 2, $v6: valor)
-		Celda (i == 2, j == 0, $v7: valor)
-		Celda (i == 2, j == 1, $v8: valor)
-		Celda (i == 2, j == 2, $v9: valor)
-		Celda (i == 0, j == 0, $v1: valor)
-		Celda (i == 0, j == 1, $v2: valor)
-		Celda (i == 0, j == 2, $v3: valor)
-		Celda (i == 1, j == 0, $v4: valor)
-		Celda (i == 1, j == 1, $v5: valor)
-		Celda (i == 1, j == 2, $v6: valor)
-		Celda (i == 2, j == 0, $v7: valor)
-		Celda (i == 2, j == 1, $v8: valor)
-		Celda (i == 2, j == 2, $v9: valor)
+		Celda (i == 0, j == 3, $v4: valor)
+		Celda (i == 0, j == 4, $v5: valor)
+		Celda (i == 0, j == 5, $v6: valor)
+		Celda (i == 0, j == 6, $v7: valor)
+		Celda (i == 1, j == 0, $v8: valor)
+		Celda (i == 1, j == 1, $v9: valor)
+		Celda (i == 1, j == 2, $v10: valor)
+		Celda (i == 1, j == 3, $v11: valor)
+		Celda (i == 1, j == 4, $v12: valor)
+		Celda (i == 1, j == 5, $v13: valor)
+		Celda (i == 1, j == 6, $v14: valor)
+		Celda (i == 2, j == 0, $v15: valor)
+		Celda (i == 2, j == 1, $v16: valor)
+		Celda (i == 2, j == 2, $v17: valor)
+		Celda (i == 2, j == 3, $v18: valor)
+		Celda (i == 2, j == 4, $v19: valor)
+		Celda (i == 2, j == 5, $v20: valor)
+		Celda (i == 2, j == 6, $v21: valor)
+		Celda (i == 3, j == 0, $v22: valor)
+		Celda (i == 3, j == 1, $v23: valor)
+		Celda (i == 3, j == 2, $v24: valor)
+		Celda (i == 3, j == 3, $v25: valor)
+		Celda (i == 3, j == 4, $v26: valor)
+		Celda (i == 3, j == 5, $v27: valor)
+		Celda (i == 3, j == 6, $v28: valor)
+		Celda (i == 4, j == 0, $v29: valor)
+		Celda (i == 4, j == 1, $v30: valor)
+		Celda (i == 4, j == 2, $v31: valor)
+		Celda (i == 4, j == 3, $v32: valor)
+		Celda (i == 4, j == 4, $v33: valor)
+		Celda (i == 4, j == 5, $v34: valor)
+		Celda (i == 4, j == 6, $v35: valor)
+		Celda (i == 5, j == 0, $v36: valor)
+		Celda (i == 5, j == 1, $v37: valor)
+		Celda (i == 5, j == 2, $v38: valor)
+		Celda (i == 5, j == 3, $v39: valor)
+		Celda (i == 5, j == 4, $v40: valor)
+		Celda (i == 5, j == 5, $v41: valor)
+		Celda (i == 5, j == 6, $v42: valor)
+		
+				
 	then
-        System.out.println($v1 +  " " + $v2 + " " + $v3);		
-        System.out.println($v4 +  " " + $v5 + " " + $v6);		
-        System.out.println($v7 +  " " + $v8 + " " + $v9);		
+        System.out.println($v1 +  " " + $v2 + " " + $v3 +  " " + $v4 + " " + $v5 +  " " + $v6 + " " + $v7);		
+        System.out.println($v8 +  " " + $v9 + " " + $v10 +  " " + $v11 + " " + $v12 +  " " + $v13 + " " + $v14);		
+        System.out.println($v15 +  " " + $v16 + " " + $v17 +  " " + $v18 + " " + $v19 +  " " + $v20 + " " + $v21);
+        System.out.println($v22 +  " " + $v23 + " " + $v24 +  " " + $v25 + " " + $v26 +  " " + $v27 + " " + $v28);
+        System.out.println($v29 +  " " + $v30 + " " + $v31 +  " " + $v32 + " " + $v33 +  " " + $v34 + " " + $v35);
+        System.out.println($v36 +  " " + $v37 + " " + $v38 +  " " + $v39 + " " + $v40 +  " " + $v41 + " " + $v42);
+        		
 end
 
 ////// REGLAS PARA CAPTURAR LA JUGADA DEL CONTRINCANTE
