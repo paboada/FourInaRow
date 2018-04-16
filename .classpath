@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="DROOLS/Drools"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/antlr-runtime.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/drools-compiler.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/drools-core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/drools-decisiontables.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/drools-jsr94.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/drools-templates.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/jbpm-bpmn2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/jbpm-flow.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/jbpm-flow-builder.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/jsr94.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/junit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/kie-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/kie-internal.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/mvel2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/org.eclipse.jdt.core_3.9.2.v20140114-1555.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/poi.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/poi-ooxml.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/protobuf-java.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/slf4j-nop-1.7.25.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/xmlpull.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/xpp3_min.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cesar/Downloads/drools-runtime-5.0.0/drools-runtime-5.0.0/xstream.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

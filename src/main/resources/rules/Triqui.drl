@@ -1,0 +1,93 @@
+package com.sample
+import javax.swing.JOptionPane;
+ 
+////// REGLAS PARA IMPRESIÓN
+rule "Imprimir"
+	when
+		Celda (i == 0, j == 0, $v1: valor)
+		Celda (i == 0, j == 1, $v2: valor)
+		Celda (i == 0, j == 2, $v3: valor)
+		Celda (i == 1, j == 0, $v4: valor)
+		Celda (i == 1, j == 1, $v5: valor)
+		Celda (i == 1, j == 2, $v6: valor)
+		Celda (i == 2, j == 0, $v7: valor)
+		Celda (i == 2, j == 1, $v8: valor)
+		Celda (i == 2, j == 2, $v9: valor)
+	then
+        System.out.println($v1 +  " " + $v2 + " " + $v3);		
+        System.out.println($v4 +  " " + $v5 + " " + $v6);		
+        System.out.println($v7 +  " " + $v8 + " " + $v9);		
+end
+
+////// REGLAS PARA CAPTURAR LA JUGADA DEL CONTRINCANTE
+rule "Hay turno y es el suyo"
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+	then
+        System.out.println( "Es su turno" );
+        try
+        {
+        	String filStr = JOptionPane.showInputDialog("Fila [0..2]");
+    		String colStr = JOptionPane.showInputDialog("Columna [0..2]");
+    		if (filStr == null && colStr == null)
+    		{
+    			System.out.println ("Partida terminada por el usuario");
+		        t.setTurno (Turno.TERMINAR);
+        		update (t);
+    		}
+    		else
+    		{
+	    		int f = Integer.parseInt (filStr);
+				int c = Integer.parseInt (colStr);
+				if (f >= 0 && f < 3 && c >= 0 && c < 3)
+				{
+        			Jugada jugada =  new Jugada(f, c);
+        			insert (jugada);
+				}
+				else
+				{
+		      		JOptionPane.showMessageDialog (null, "Jugada inválida", "ERROR", JOptionPane.ERROR_MESSAGE);	
+        			update (t);
+        		}
+    		}
+        }
+        catch (Exception e)
+        {
+        	JOptionPane.showMessageDialog (null, "Error", "ERROR", JOptionPane.ERROR_MESSAGE);
+       		update (t);
+        }	
+end        
+	
+rule "Jugada contrincante inválida"
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+		jugada : Jugada ($f : fila, $c : col, analizada == false)
+		c : Celda (i == $f, j == $c, valor != Celda.NADA)
+	then
+        System.out.println( "Celda (" + $f + ", " + $c + ") está ocupada");
+		modify (jugada) {setAnalizada (true)};
+		update (t);
+end
+
+rule "Jugada contrincante válida"
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+		jugada : Jugada ($f : fila, $c : col, analizada == false)
+		c : Celda (i == $f, j == $c, valor == Celda.NADA)
+	then
+        System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
+        modify (c) {setValor (Celda.EQUIS)};
+		modify (jugada) {setAnalizada (true)};
+        modify (t) {setTurno (Turno.MI_TURNO)};
+end
+
+rule "Hay turno y es el mio y hay espacio desocupado"
+	salience 2
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c : Celda (valor == Celda.NADA)
+	then
+        System.out.println("Juego en una celda desocupada: " + c.toString());
+        modify (c) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        

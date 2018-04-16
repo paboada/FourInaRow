@@ -1,0 +1,356 @@
+package com.sample
+import javax.swing.JOptionPane;
+ 
+/* Reglas iniciales para probar que los hechos se generaron correctamente
+rule "Hay turno"
+	when
+		t : Turno ()
+	then
+        System.out.println( "Turno : " + t.getTurno () );
+end        
+
+rule "Hay celda"
+	when
+		c: Celda ()
+	then
+        System.out.println( c.getI () + " " + c.getJ () + " " + c.getValor () );
+end        
+
+rule "X por -"
+
+    when
+    	c : Celda (valor == "X")
+        //conditions
+    then
+        //actions
+        c.setValor ("-");
+        update (c);
+end	
+
+rule "Ver diagonal"
+	salience 8
+	when
+		c1 : Celda ($d11 : Math.abs (i - j), $d12 : (i + j), $v1 : valor)
+		c2 : Celda (c2 != c1, $d21 : Math.abs (i - j), $d22 : (i + j), $v2 : valor)
+		c3 : Celda (c3 != c1 && c3 != c2, $d31 : Math.abs (i - j), $d32 : (i + j), $v3 : valor)
+		eval ($d11 == $d21 && $d11 == $d31 || $d12 == $d22 && $d22 == $d32)
+		//eval ($d11 == $d21 && $d21 == $d31 || $d12 == $d22 && $d22 == $d32)
+	then
+        System.out.println("Misma diagonal");
+        System.out.println( $d11 + " " + $d12 + " " + $v1 + " " + $v2 + " " + $v3);
+        System.out.println( $d21 + " " + $d22 + " " + $v1 + " " + $v2 + " " + $v3);
+        System.out.println( $d31 + " " + $d32 + " " + $v1 + " " + $v2 + " " + $v3);
+end        
+*/
+////// REGLAS PARA IMPRESIÓN
+rule "Imprimir"
+	when
+		Celda (i == 0, j == 0, $v1: valor)
+		Celda (i == 0, j == 1, $v2: valor)
+		Celda (i == 0, j == 2, $v3: valor)
+		Celda (i == 1, j == 0, $v4: valor)
+		Celda (i == 1, j == 1, $v5: valor)
+		Celda (i == 1, j == 2, $v6: valor)
+		Celda (i == 2, j == 0, $v7: valor)
+		Celda (i == 2, j == 1, $v8: valor)
+		Celda (i == 2, j == 2, $v9: valor)
+	then
+        System.out.println($v1 +  " " + $v2 + " " + $v3);		
+        System.out.println($v4 +  " " + $v5 + " " + $v6);		
+        System.out.println($v7 +  " " + $v8 + " " + $v9);		
+end
+
+////// REGLAS PARA CAPTURAR LA JUGADA DEL CONTRINCANTE
+rule "Hay turno y es el suyo"
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+	then
+        System.out.println( "Es su turno" );
+        try
+        {
+        	String filStr = JOptionPane.showInputDialog("Fila");
+    		String colStr = JOptionPane.showInputDialog("Columna");
+    		if (filStr == null && colStr == null)
+    		{
+    			System.out.println ("Partida terminada por el usuario");
+		        t.setTurno (Turno.TERMINAR);
+        		update (t);
+    		}
+    		else
+    		{
+	    		int f = Integer.parseInt (filStr);
+				int c = Integer.parseInt (colStr);
+				if (f >= 0 && f < 3 && c >= 0 && c < 3)
+				{
+        			Jugada jugada =  new Jugada(f, c);
+        			insert (jugada);
+				}
+				else
+				{
+		      		JOptionPane.showMessageDialog (null, "Jugada inválida", "ERROR", JOptionPane.ERROR_MESSAGE);	
+        			update (t);
+        		}
+    		}
+        }
+        catch (Exception e)
+        {
+        	JOptionPane.showMessageDialog (null, "Error", "ERROR", JOptionPane.ERROR_MESSAGE);
+       		update (t);
+        }	
+end        
+	
+rule "Jugada contrincante inválida"
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+		jugada : Jugada ($f : fila, $c : col, analizada == false)
+		c : Celda (i == $f, j == $c, valor != Celda.NADA)
+	then
+        System.out.println( "Celda (" + $f + ", " + $c + ") está ocupada");
+		modify (jugada) {setAnalizada (true)};
+		update (t);
+end
+
+rule "Jugada contrincante válida"
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+		jugada : Jugada ($f : fila, $c : col, analizada == false)
+		c : Celda (i == $f, j == $c, valor == Celda.NADA)
+	then
+        System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
+        modify (c) {setValor (Celda.EQUIS)};
+		modify (jugada) {setAnalizada (true)};
+        modify (t) {setTurno (Turno.MI_TURNO)};
+end
+
+////// REGLAS PARA VERIFICAR SI ALGUNO GANO
+rule "Gana en horizontal"
+	salience 10
+	when
+		t : Turno (turno != Turno.TERMINAR)
+		c1 : Celda ($f : i, $val : valor, $col1 : j, valor != Celda.NADA)
+		c2 : Celda ($f == i, $val == valor, $col2 : j, $col2 == $col1 + 1)
+		c3 : Celda ($f == i, $val == valor, $col3 : j, $col3 == $col2 + 1)
+	then
+        System.out.println( "Ganó el " + $val + " en la fila " + $f);
+        modify (t) {setTurno (Turno.TERMINAR)};
+end		
+
+rule "Gana en vertical"
+	salience 10
+	when
+		t : Turno (turno != Turno.TERMINAR)
+		c1 : Celda ($c : j, $val : valor, $fil1 : i && valor != Celda.NADA)
+		c2 : Celda ($c == j, $val == valor, $fil2 : i, $fil2 == $fil1 + 1)
+		c3 : Celda ($c == j, $val == valor, $fil3 : i, $fil3 == $fil2 + 1)
+	then
+        System.out.println( "Ganó el " + $val + " en la columna " + $c);
+        modify (t) {setTurno (Turno.TERMINAR)};
+end
+
+rule "Gana en diagonal"
+	salience 10
+	when
+		t : Turno (turno != Turno.TERMINAR)
+		c1 : Celda ($f1 : i, $c1 : j, $d11 : Math.abs (i - j), $d12 : (i + j), $val : valor, valor != Celda.NADA)
+		c2 : Celda ($f2 : i, $c2 : j, $d21 : Math.abs (i - j), $d22 : (i + j), $val == valor)
+		c3 : Celda ($f3 : i, $c3 : j, $d31 : Math.abs (i - j), $d32 : (i + j), $val == valor)
+		eval (($f1 != $f2 && $f1 != $f3 && $f2 != $f3)	// No están en la misma fila
+			&& ($c1 != $c2 && $c1 != $c3 && $c2 != $c3)	// No están en la misma columna
+			&& ($d11 == $d21 && $d11 == $d31 || $d12 == $d22 && $d22 == $d32)) // Están en la misma diagonal
+	then
+        System.out.println( "Ganó el " + $val + " en una diagonal");
+        modify (t) {setTurno (Turno.TERMINAR)};
+end        
+
+rule "Empate"
+	salience 10
+	when
+		t : Turno (turno != Turno.TERMINAR)
+		not Celda (valor == Celda.NADA)
+	then
+        System.out.println( "Empate");
+        modify (t) {setTurno (Turno.TERMINAR)};
+end				
+
+////// REGLAS PARA MI JUGADA
+rule "Hay turno y es el mio y ganar horizontal"
+	salience 8
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($f : i, valor == Celda.OES)
+		c2 : Celda (c2 != c1, $f == i, valor == Celda.OES)
+		c3 : Celda (c3 != c1, c3 != c2, $f == i, valor == Celda.NADA)
+	then
+        System.out.println( "Ganando con triqui horizontal en " + c3.toString ());
+        modify (c3) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+
+rule "Hay turno y es el mio y ganar vertical"
+	salience 8
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($col : j, valor == Celda.OES)
+		c2 : Celda (c2 != c1, $col == j, $col2 : j, valor == Celda.OES)
+		c3 : Celda (c3 != c1, c3 != c2, $col == j, $col3 : j, valor == Celda.NADA)
+	then
+        System.out.println( "Ganando con triqui vertical en " + c3.toString ());
+        modify (c3) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+
+rule "Hay turno y es el mio y ganar con la diagonal"
+	salience 8
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($f1 : i, $c1 : j, $d11 : Math.abs (i - j), $d12 : (i + j), valor == Celda.OES)
+		c2 : Celda ($f2 : i, $c2 : j, $d21 : Math.abs (i - j), $d22 : (i + j), valor == Celda.OES)
+		c3 : Celda ($f3 : i, $c3 : j, $d31 : Math.abs (i - j), $d32 : (i + j), valor == Celda.NADA)
+		eval (($f1 != $f2 && $f1 != $f3 && $f2 != $f3)	// No están en la misma fila
+			&& ($c1 != $c2 && $c1 != $c3 && $c2 != $c3)	// No están en la misma columna
+			&& ($d11 == $d21 && $d11 == $d31 || $d12 == $d22 && $d22 == $d32)) // Están en la misma diagonal
+	then
+        System.out.println( "Ganando con triqui en diagonal " + c3.toString ());
+        modify (c3) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+
+rule "Hay turno y es el mio y bloquear al otro horizontal"
+	salience 6
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($f : i, valor == Celda.EQUIS)
+		c2 : Celda (c2 != c1, $f == i, valor == Celda.EQUIS)
+		c3 : Celda (c3 != c1, c3 != c2, $f == i, valor == Celda.NADA)
+	then
+        System.out.println( "Bloqueando jugada ganadora horizontal en  " + c3.toString ());
+        modify (c3) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+
+rule "Hay turno y es el mio y bloquear al otro vertical"
+	salience 6
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($col : j, valor == Celda.EQUIS)
+		c2 : Celda (c2 != c1, $col == j, $col2 : j, valor == Celda.EQUIS)
+		c3 : Celda (c3 != c1, c3 != c2, $col == j, $col3 : j, valor == Celda.NADA)
+	then
+        System.out.println( "Bloqueando jugada ganadora vertical en " + c3.toString());
+        modify (c3) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+
+rule "Hay turno y es el mío y bloquear al otro diagonal"
+	salience 6
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($f1 : i, $c1 : j, $d11 : Math.abs (i - j), $d12 : (i + j), valor == Celda.EQUIS)
+		c2 : Celda ($f2 : i, $c2 : j, $d21 : Math.abs (i - j), $d22 : (i + j), valor == Celda.EQUIS)
+		c3 : Celda ($f3 : i, $c3 : j, $d31 : Math.abs (i - j), $d32 : (i + j), valor == Celda.NADA)
+		eval (($f1 != $f2 && $f1 != $f3 && $f2 != $f3)	// No están en la misma fila
+			&& ($c1 != $c2 && $c1 != $c3 && $c2 != $c3)	// No están en la misma columna
+			&& ($d11 == $d21 && $d11 == $d31 || $d12 == $d22 && $d22 == $d32)) // Están en la misma diagonal
+	then
+        System.out.println( "Bloqueando jugada ganadora diagonal en " + c3.toString ());
+        modify (c3) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end
+
+rule "Hay turno y es el mio y es la primera jugada"
+	salience 4
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda (i == 0, j == 0)
+		c2 : Celda (i == 0, j == 2)
+		c3 : Celda (i == 2, j == 0)
+		c4 : Celda (i == 2, j == 2)
+		not Celda (valor != Celda.NADA)
+	then
+        int cual = (int) (Math.random () * 4) + 1;
+        if (cual == 1)
+        {
+	        System.out.println ("Juego en una esquina " + c1.toString ());
+	        modify (c1) {setValor (Celda.OES)};
+        }
+        else if (cual == 2)
+        {
+	        System.out.println ("Juego en una esquina " + c2.toString ());
+	        modify (c2) {setValor (Celda.OES)};
+        }
+        else if (cual == 3)
+        {
+	        System.out.println ("Juego en una esquina " + c3.toString ());
+	        modify (c3) {setValor (Celda.OES)};
+        }
+        else
+        {
+	        System.out.println ("Juego en una esquina " + c4.toString ());
+	        modify (c4) {setValor (Celda.OES)};
+        }        
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+
+rule "Hay turno y es el mio y tengo una esquina y puedo jugar en la esquina opuesta"
+	salience 4
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda (valor == Celda.OES)
+		c2 : Celda (valor == Celda.NADA)
+		eval (c1.esEsquina () && c2.esEsquina () && c1.opuesta (c2))
+	then
+        System.out.println("Juego en diagonal " + c2.toString ());
+   	    modify (c2) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+
+rule "Hay turno y es el mio y el otro tiene dos esquinas opuestas y las otras dos esquinas están desocupadas"
+	salience 4
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda (valor == Celda.EQUIS)
+		c2 : Celda (valor == Celda.EQUIS)
+		c3 : Celda (fil3 : i, col3 : j, valor == Celda.OES)
+		c4 : Celda (fil4 : i, col4 : j, valor == Celda.NADA)
+		eval (c1.esEsquina () && c2.esEsquina () && c1.opuesta (c2) &&
+			fil3 == fil4 || col3 == col4)
+	then
+        System.out.println("Juego amenzando ganar en la siguiente jugada en " + c4.toString ());
+        modify (c4) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+
+rule "Hay turno y es el mio y el centro está desocupado"
+	salience 4
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c : Celda (i == 1, j == 1, valor == Celda.NADA)
+	then
+        System.out.println("Juego en el centro que está desocupado en " + c.toString ());
+        modify (c) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+
+rule "Hay turno y es el mio y hay esquina desocupada **"
+	salience 2 
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c : Celda ((i == 0 || i == 2) && (j == 0 || j == 2), valor == Celda.NADA)
+		
+	then
+        System.out.println("Juego en una esquina desocupada: " + c.toString());
+        modify (c) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+/*
+rule "Hay turno y es el mio y hay espacio desocupado"
+	salience 2
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c : Celda (valor == Celda.NADA)
+	then
+        System.out.println("Juego en una celda desocupada: " + c.toString());
+        modify (c) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end        
+*/
