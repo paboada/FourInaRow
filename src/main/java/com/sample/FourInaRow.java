@@ -32,9 +32,9 @@ public class FourInaRow
 	
 	private static void inicializar (KieSession kSession)
 	{
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 6; i++)
 		{
-			for (int j = 0; j < 3; j++)
+			for (int j = 0; j < 7; j++)
 			{
 		        kSession.insert(new Celda (i, j));
 			}
