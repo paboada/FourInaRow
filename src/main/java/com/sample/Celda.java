@@ -6,8 +6,11 @@ public class Celda
 	public static final String OES = "O";
 	public static final String NADA = "-";
 
-	private static final int MIN = 0;
-	private static final int MAX = 2;
+	private static final int MIN_COL = 0;
+	private static final int MAX_COL = 6;
+	
+	private static final int MIN_FIL = 0; 
+	private static final int MAX_FIL = 5;
 
 	private int i;
 	private int j;
@@ -37,6 +40,7 @@ public class Celda
 		this.valor = valor;
 	}
 	
+	
 	public int getI ()
 	{
 		return i;
@@ -54,14 +58,19 @@ public class Celda
 	
 	public boolean esEsquina ()
 	{
-		return (i == MIN || i == MAX) && (j == MIN || j == MAX);
+		return (i == MIN_FIL || i == MAX_FIL) && (j == MIN_COL || j == MAX_COL);
 	}
+	
+	/*public int estaVacio(Celda c1) {
+		
+		
+	}*/
 
 	public boolean opuesta (Celda c2)
 	{
-		return (i == MIN && j == MIN && c2.i == MAX && c2.j == MAX) || 
-				(i == MIN && j == MAX && c2.i == MAX && c2.j == MIN) || 
-				(i == MAX && j == MIN && c2.i == MIN && c2.j == MAX) || 
-				(i == MAX && j == MAX && c2.i == MIN && c2.j == MIN);
+		return (i == MIN_FIL && j == MIN_COL && c2.i == MAX_FIL && c2.j == MAX_COL) || 
+				(i == MIN_FIL && j == MAX_COL && c2.i == MAX_FIL && c2.j == MIN_COL) || 
+				(i == MAX_FIL && j == MIN_COL && c2.i == MIN_FIL && c2.j == MAX_COL) || 
+				(i == MAX_FIL && j == MAX_COL && c2.i == MIN_FIL && c2.j == MIN_COL);
 	}
 }

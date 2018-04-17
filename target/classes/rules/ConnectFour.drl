@@ -1,6 +1,9 @@
 package com.sample
 import javax.swing.JOptionPane;
  
+ 
+global Integer fondo; 
+ 
 ////// REGLAS PARA IMPRESIÓN
 rule "Imprimir"
 	when
@@ -75,7 +78,12 @@ end
 rule "Hay turno y es el suyo"
 	when
 		t : Turno (turno == Turno.SU_TURNO)
-		//c1 : Celda ($f : i, $val : valor, $col1 : j, valor != Celda.NADA)
+		//c0 : Celda (i == $f, j == $c, valor == Celda.NADA)
+		//c1 : Celda (i == $f-1, j == $c)
+		//c2 : Celda (i == $f-2, j == $c)
+		//c3 : Celda (i == $f-3, j == $c)
+		//c4 : Celda (i == $f-4, j == $c)
+		//not Celda (valor != Celda.NADA)
 	then
         System.out.println( "Es su turno" );
         try
@@ -93,16 +101,18 @@ rule "Hay turno y es el suyo"
     		else
     		{
 	    		//int f = Integer.parseInt (filStr);
-	    		int f = 0;
+	    		int f = 5;
 				int c = Integer.parseInt (colStr);
 				//if (f >= 0 && f < 3 && c >= 0 && c < 3)
+				
 				if (c >= 0 && c < 7)
 				{
-					Celda celda = new Celda(f,c);
+					//Celda celda = new Celda(f,c);
         			Jugada jugada =  new Jugada(f, c);
         			System.out.println(jugada.getFila()+ " " + jugada.getCol() + " esta es la jugada");
         			
         			insert (jugada);
+        			
         			
 				}
 				else
@@ -120,6 +130,7 @@ rule "Hay turno y es el suyo"
 end        
 	
 rule "Jugada contrincante inválida"
+	salience 2
 	when
 		t : Turno (turno == Turno.SU_TURNO)
 		jugada : Jugada ($f : fila, $c : col, analizada == false)
@@ -130,20 +141,91 @@ rule "Jugada contrincante inválida"
 		update (t);
 end
 
-
+rule "Gana en vertical"
+	salience 10
+	when
+		t : Turno (turno != Turno.TERMINAR)
+		c1 : Celda ($c : j, $val : valor, $fil1 : i && valor != Celda.NADA)
+		c2 : Celda ($c == j, $val == valor, $fil2 : i, $fil2 == $fil1 + 1)
+		c3 : Celda ($c == j, $val == valor, $fil3 : i, $fil3 == $fil2 + 1)
+		c4 : Celda ($c == j, $val == valor, $fil4 : i, $fil4 == $fil3 + 1)
+	then
+        System.out.println( "Ganó el " + $val + " en la column " + $c);
+        modify (t) {setTurno (Turno.TERMINAR)};
+end
 
 
 rule "Jugada contrincante válida"
+	salience 10
 	when
 		t : Turno (turno == Turno.SU_TURNO)
 		jugada : Jugada ($f : fila, $c : col, analizada == false)
 		c : Celda (i == $f, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
+		 
 	then
         System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
+        
+        
         modify (c) {setValor (Celda.EQUIS)};
 		modify (jugada) {setAnalizada (true)};
+		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
+		//$f=$f+1;
+		//System.out.println(" minuevof"+$f);
+				
         modify (t) {setTurno (Turno.MI_TURNO)};
 end
+
+
+rule "Jugada contrincante válida 2"
+	salience 9
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+		jugada : Jugada ($f : fila, $c : col, analizada == false)
+		c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
+		 
+	then
+        System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
+        
+        
+        modify (c) {setValor (Celda.EQUIS)};
+		modify (jugada) {setAnalizada (true)};
+		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
+		//$f=$f+1;
+		//System.out.println(" minuevof"+$f);
+				
+        modify (t) {setTurno (Turno.MI_TURNO)};
+end
+
+
+rule "Jugada contrincante válida 3"
+	salience 8
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+		jugada : Jugada ($f : fila, $c : col, analizada == false)
+		c : Celda (i == $f-2, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
+		 
+	then
+        System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
+        
+        
+        modify (c) {setValor (Celda.EQUIS)};
+		modify (jugada) {setAnalizada (true)};
+		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
+		//$f=$f+1;
+		//System.out.println(" minuevof"+$f);
+				
+        modify (t) {setTurno (Turno.MI_TURNO)};
+end
+
+
+
+
 
 rule "Hay turno y es el mio y hay espacio desocupado"
 	salience 2
