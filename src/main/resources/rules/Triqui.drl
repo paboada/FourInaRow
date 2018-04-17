@@ -58,30 +58,52 @@ rule "Imprimir"
         		
 end
 
+rule "Hay turno y es el mio y ganar vertical"
+	salience 8
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($col : j, valor == Celda.OES)
+		c2 : Celda (c2 != c1, $col == j, $col2 : j, valor == Celda.OES)
+		c3 : Celda (c3 != c1, c3 != c2, $col == j, $col3 : j, valor == Celda.NADA)
+	then
+        System.out.println( "Ganando con triqui vertical en " + c3.toString ());
+        modify (c3) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end   
+
 ////// REGLAS PARA CAPTURAR LA JUGADA DEL CONTRINCANTE
 rule "Hay turno y es el suyo"
 	when
 		t : Turno (turno == Turno.SU_TURNO)
+		//c1 : Celda ($f : i, $val : valor, $col1 : j, valor != Celda.NADA)
 	then
         System.out.println( "Es su turno" );
         try
         {
-        	String filStr = JOptionPane.showInputDialog("Fila [0..2]");
-    		String colStr = JOptionPane.showInputDialog("Columna [0..2]");
-    		if (filStr == null && colStr == null)
-    		{
+        	// modificando para mostrar el número de filas y columnas permitidos
+        	//String filStr = JOptionPane.showInputDialog("Fila [0..5]");
+    		String colStr = JOptionPane.showInputDialog("Columna [0..6]");
+    		//if (filStr == null && colStr == null)
+			if (colStr == null)
+	   		{
     			System.out.println ("Partida terminada por el usuario");
 		        t.setTurno (Turno.TERMINAR);
         		update (t);
     		}
     		else
     		{
-	    		int f = Integer.parseInt (filStr);
+	    		//int f = Integer.parseInt (filStr);
+	    		int f = 0;
 				int c = Integer.parseInt (colStr);
-				if (f >= 0 && f < 3 && c >= 0 && c < 3)
+				//if (f >= 0 && f < 3 && c >= 0 && c < 3)
+				if (c >= 0 && c < 7)
 				{
+					Celda celda = new Celda(f,c);
         			Jugada jugada =  new Jugada(f, c);
+        			System.out.println(jugada.getFila()+ " " + jugada.getCol() + " esta es la jugada");
+        			
         			insert (jugada);
+        			
 				}
 				else
 				{
@@ -107,6 +129,9 @@ rule "Jugada contrincante inválida"
 		modify (jugada) {setAnalizada (true)};
 		update (t);
 end
+
+
+
 
 rule "Jugada contrincante válida"
 	when
