@@ -62,14 +62,14 @@ rule "Imprimir"
 end
 
 rule "Hay turno y es el mio y ganar vertical"
-	salience 8
+	salience 1
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($col : j, valor == Celda.OES)
 		c2 : Celda (c2 != c1, $col == j, $col2 : j, valor == Celda.OES)
 		c3 : Celda (c3 != c1, c3 != c2, $col == j, $col3 : j, valor == Celda.NADA)
 	then
-        System.out.println( "Ganando con triqui vertical en " + c3.toString ());
+        System.out.println( "Ganando en vertical en " + c3.toString ());
         modify (c3) {setValor (Celda.OES)};
         modify (t) {setTurno (Turno.SU_TURNO)};
 end   
@@ -142,7 +142,7 @@ rule "Jugada contrincante inválida"
 end
 
 rule "Gana en vertical"
-	salience 10
+	salience 11
 	when
 		t : Turno (turno != Turno.TERMINAR)
 		c1 : Celda ($c : j, $val : valor, $fil1 : i && valor != Celda.NADA)
@@ -223,17 +223,163 @@ rule "Jugada contrincante válida 3"
         modify (t) {setTurno (Turno.MI_TURNO)};
 end
 
+rule "Jugada contrincante válida 4"
+	salience 7
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+		jugada : Jugada ($f : fila, $c : col, analizada == false)
+		c : Celda (i == $f-3, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
+		 
+	then
+        System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
+        
+        
+        modify (c) {setValor (Celda.EQUIS)};
+		modify (jugada) {setAnalizada (true)};
+		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
+		//$f=$f+1;
+		//System.out.println(" minuevof"+$f);
+				
+        modify (t) {setTurno (Turno.MI_TURNO)};
+end
 
+rule "Jugada contrincante válida 5"
+	salience 6
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+		jugada : Jugada ($f : fila, $c : col, analizada == false)
+		c : Celda (i == $f-4, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
+		 
+	then
+        System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
+        
+        
+        modify (c) {setValor (Celda.EQUIS)};
+		modify (jugada) {setAnalizada (true)};
+		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
+		//$f=$f+1;
+		//System.out.println(" minuevof"+$f);
+				
+        modify (t) {setTurno (Turno.MI_TURNO)};
+end
 
+rule "Jugada contrincante válida 6"
+	salience 5
+	when
+		t : Turno (turno == Turno.SU_TURNO)
+		jugada : Jugada ($f : fila, $c : col, analizada == false)
+		c : Celda (i == $f-5, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
+		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
+		 
+	then
+        System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
+        
+        
+        modify (c) {setValor (Celda.EQUIS)};
+		modify (jugada) {setAnalizada (true)};
+		modify (t) {setTurno (Turno.MI_TURNO)};
+end
 
 
 rule "Hay turno y es el mio y hay espacio desocupado"
-	salience 2
+	salience 10
 	when
 		t : Turno (turno == Turno.MI_TURNO)
-		c : Celda (valor == Celda.NADA)
+		//c : Celda (valor == Celda.NADA)
+		c : Celda ($f : i, $c : j, valor == Celda.NADA)
+		c1: Celda(i == $f+5, j==$c, valor == Celda.NADA)
+		
 	then
         System.out.println("Juego en una celda desocupada: " + c.toString());
-        modify (c) {setValor (Celda.OES)};
+        System.out.println(" PRUEBA " + $f);
+       
+        modify (c1) {setValor (Celda.OES)};
         modify (t) {setTurno (Turno.SU_TURNO)};
 end        
+
+rule "Hay turno y es el mio y hay espacio desocupado 2"
+	salience 9
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		//c : Celda (valor == Celda.NADA)
+		c : Celda ($f : i, $c : j, valor == Celda.NADA)
+		c1: Celda(i == $f+4, j==$c, valor == Celda.NADA)
+		
+	then
+        System.out.println("Juego en una celda desocupada: " + c.toString());
+        System.out.println(" PRUEBA " + $f);
+       
+        modify (c1) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end
+
+rule "Hay turno y es el mio y hay espacio desocupado 3"
+	salience 8
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		//c : Celda (valor == Celda.NADA)
+		c : Celda ($f : i, $c : j, valor == Celda.NADA)
+		c1: Celda(i == $f+3, j==$c, valor == Celda.NADA)
+		
+	then
+        System.out.println("Juego en una celda desocupada: " + c.toString());
+        System.out.println(" PRUEBA " + $f);
+       
+        modify (c1) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end
+
+rule "Hay turno y es el mio y hay espacio desocupado 4"
+	salience 7
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		//c : Celda (valor == Celda.NADA)
+		c : Celda ($f : i, $c : j, valor == Celda.NADA)
+		c1: Celda(i == $f+2, j==$c, valor == Celda.NADA)
+		
+	then
+        System.out.println("Juego en una celda desocupada: " + c.toString());
+        System.out.println(" PRUEBA " + $f);
+       
+        modify (c1) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end
+
+rule "Hay turno y es el mio y hay espacio desocupado 5"
+	salience 6
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		//c : Celda (valor == Celda.NADA)
+		c : Celda ($f : i, $c : j, valor == Celda.NADA)
+		c1: Celda(i == $f+1, j==$c, valor == Celda.NADA)
+		
+	then
+        System.out.println("Juego en una celda desocupada: " + c.toString());
+        System.out.println(" PRUEBA " + $f);
+       
+        modify (c1) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end
+
+rule "Hay turno y es el mio y hay espacio desocupado 6"
+	salience 5
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		//c : Celda (valor == Celda.NADA)
+		c : Celda ($f : i, $c : j, valor == Celda.NADA)
+		c1: Celda(i == $f, j==$c, valor == Celda.NADA)
+		
+	then
+        System.out.println("Juego en una celda desocupada: " + c.toString());
+        System.out.println(" PRUEBA " + $f);
+       
+        modify (c1) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end
+
+
