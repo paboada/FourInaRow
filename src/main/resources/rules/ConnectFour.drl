@@ -52,12 +52,13 @@ rule "Imprimir"
 		
 				
 	then
-        System.out.println($v1 +  " " + $v2 + " " + $v3 +  " " + $v4 + " " + $v5 +  " " + $v6 + " " + $v7);		
-        System.out.println($v8 +  " " + $v9 + " " + $v10 +  " " + $v11 + " " + $v12 +  " " + $v13 + " " + $v14);		
-        System.out.println($v15 +  " " + $v16 + " " + $v17 +  " " + $v18 + " " + $v19 +  " " + $v20 + " " + $v21);
-        System.out.println($v22 +  " " + $v23 + " " + $v24 +  " " + $v25 + " " + $v26 +  " " + $v27 + " " + $v28);
-        System.out.println($v29 +  " " + $v30 + " " + $v31 +  " " + $v32 + " " + $v33 +  " " + $v34 + " " + $v35);
-        System.out.println($v36 +  " " + $v37 + " " + $v38 +  " " + $v39 + " " + $v40 +  " " + $v41 + " " + $v42);
+		System.out.println("  "+ 0 +  " " + 1 + " " + 2 +  " " + 3 + " " + 4 +  " " + 5 + " " + 6);		
+        System.out.println(0 +  " " + $v1 +  " " + $v2 + " " + $v3 +  " " + $v4 + " " + $v5 +  " " + $v6 + " " + $v7);		
+        System.out.println(1 +  " " + $v8 +  " " + $v9 + " " + $v10 +  " " + $v11 + " " + $v12 +  " " + $v13 + " " + $v14);		
+        System.out.println(2 +  " " + $v15 +  " " + $v16 + " " + $v17 +  " " + $v18 + " " + $v19 +  " " + $v20 + " " + $v21);
+        System.out.println(3 +  " " + $v22 +  " " + $v23 + " " + $v24 +  " " + $v25 + " " + $v26 +  " " + $v27 + " " + $v28);
+        System.out.println(4 +  " " + $v29 +  " " + $v30 + " " + $v31 +  " " + $v32 + " " + $v33 +  " " + $v34 + " " + $v35);
+        System.out.println(5 +  " " + $v36 +  " " + $v37 + " " + $v38 +  " " + $v39 + " " + $v40 +  " " + $v41 + " " + $v42);
         		
 end
 
@@ -141,18 +142,7 @@ rule "Jugada contrincante inválida"
 		update (t);
 end
 
-rule "Gana en vertical"
-	salience 11
-	when
-		t : Turno (turno != Turno.TERMINAR)
-		c1 : Celda ($c : j, $val : valor, $fil1 : i && valor != Celda.NADA)
-		c2 : Celda ($c == j, $val == valor, $fil2 : i, $fil2 == $fil1 + 1)
-		c3 : Celda ($c == j, $val == valor, $fil3 : i, $fil3 == $fil2 + 1)
-		c4 : Celda ($c == j, $val == valor, $fil4 : i, $fil4 == $fil3 + 1)
-	then
-        System.out.println( "Ganó el " + $val + " en la column " + $c);
-        modify (t) {setTurno (Turno.TERMINAR)};
-end
+
 
 
 rule "Jugada contrincante válida"
@@ -381,5 +371,75 @@ rule "Hay turno y es el mio y hay espacio desocupado 6"
         modify (c1) {setValor (Celda.OES)};
         modify (t) {setTurno (Turno.SU_TURNO)};
 end
+
+rule "Termina el juego por ganar en vertical"
+	salience 11
+	when
+		t : Turno (turno != Turno.TERMINAR)
+		c1 : Celda ($c : j, $val : valor, $fil1 : i && valor != Celda.NADA)
+		c2 : Celda ($c == j, $val == valor, $fil2 : i, $fil2 == $fil1 + 1)
+		c3 : Celda ($c == j, $val == valor, $fil3 : i, $fil3 == $fil2 + 1)
+		c4 : Celda ($c == j, $val == valor, $fil4 : i, $fil4 == $fil3 + 1)
+	then
+        System.out.println( "Ganó el " + $val + " en la column " + $c);
+        modify (t) {setTurno (Turno.TERMINAR)};
+end
+
+
+rule "Termina el juego por ganar en horizontal"
+	salience 11
+	when
+		t : Turno (turno != Turno.TERMINAR)
+		c1 : Celda ($f : i, $val : valor, $col1 : j, valor != Celda.NADA)
+		c2 : Celda ($f == i, $val == valor, $col2 : j, $col2 == $col1 + 1)
+		c3 : Celda ($f == i, $val == valor, $col3 : j, $col3 == $col2 + 1)
+		c4 : Celda ($f == i, $val == valor, $col4 : j, $col4 == $col3 + 1)
+		
+	then
+        System.out.println( "Ganó el " + $val + " en la fila " + $f);
+        modify (t) {setTurno (Turno.TERMINAR)};
+end	
+
+
+rule "Termina el juego por ganar en diagonal"
+	salience 11
+	when
+		t : Turno (turno != Turno.TERMINAR)
+		c1 : Celda ($f1 : i, $c1 : j, $d11 : (i - j), $d12 : (i + j), $val : valor, valor != Celda.NADA)
+		c2 : Celda ($f2 : i, $c2 : j, $d21 : (i - j), $d22 : (i + j), $val == valor)
+		c3 : Celda ($f3 : i, $c3 : j, $d31 : (i - j), $d32 : (i + j), $val == valor)
+		c4 : Celda ($f4 : i, $c4 : j, $d41 : (i - j), $d42 : (i + j), $val == valor)
+		
+		eval (($f1 != $f2 && $f1 != $f3 && $f1 != $f4 && $f2 != $f3 && $f2 != $f4 && $f3 != $f4 )	// No están en la misma fila
+			&& ($c1 != $c2 && $c1 != $c3 && $c1 != $c4 && $c2 != $c3 && $c2 != $c4 && $c3 != $c4)	// No están en la misma columna
+			&& ($d11 == $d21 && $d11 == $d31 && $d11 == $d41 || $d12 == $d22 && $d22 == $d32 && $d32 == $d42)
+			&&($c2 == $c1+1 && $c3 == $c1+2 && $c4 == $c1+3 || $c2 == $c1-1 && $c3 == $c1-2 && $c4 == $c1-3) ) // Están en la misma diagonal
+	then
+        System.out.println( "Ganó el " + $val + " en una diagonal");
+        System.out.println("$f1: " + $f1+" "+ "$c1:" +$c1+" " );
+        System.out.println("$f2: " + $f2+" "+ "$c2:" +$c2+" " );
+        System.out.println("$f3: " + $f3+" "+ "$c3:" +$c3+" " );
+        System.out.println("$f4: " + $f4+" "+ "$c4:" +$c4+" " );
+        System.out.println("$d11: " + $d11+" "+ "$d21:" +$d21+" " );
+        System.out.println("$d31: " + $d31+" "+ "$d41:" +$d41+" " );
+        System.out.println("$d12: " + $d12+" "+ "$d22:" +$d22+" " );
+        System.out.println("$d32: " + $d32+" "+ "$d42:" +$d42+" " );
+        modify (t) {setTurno (Turno.TERMINAR)};
+end 
+
+rule "Empate"
+	salience 113
+	
+	when
+		t : Turno (turno != Turno.TERMINAR)
+		not Celda (valor == Celda.NADA)
+	then
+        System.out.println( "Empate");
+        modify (t) {setTurno (Turno.TERMINAR)};
+end	
+
+
+
+
 
 
