@@ -202,15 +202,13 @@ rule "Jugada contrincante válida 3"
 		 
 	then
         System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
-        
-        
+              
         modify (c) {setValor (Celda.EQUIS)};
 		modify (jugada) {setAnalizada (true)};
 		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
 		//$f=$f+1;
 		//System.out.println(" minuevof"+$f);
-				
-        modify (t) {setTurno (Turno.MI_TURNO)};
+		modify (t) {setTurno (Turno.MI_TURNO)};
 end
 
 rule "Jugada contrincante válida 4"
@@ -385,6 +383,7 @@ rule "Termina el juego por ganar en vertical"
         modify (t) {setTurno (Turno.TERMINAR)};
 end
 
+/// Reglas para establecer la terminación del juego
 
 rule "Termina el juego por ganar en horizontal"
 	salience 11
@@ -428,7 +427,7 @@ rule "Termina el juego por ganar en diagonal"
 end 
 
 rule "Empate"
-	salience 113
+	salience 20
 	
 	when
 		t : Turno (turno != Turno.TERMINAR)
