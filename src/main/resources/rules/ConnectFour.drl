@@ -145,7 +145,7 @@ end
 
 
 
-rule "Jugada contrincante válida"
+rule "Jugada contrincante válida en fondo"
 	salience 10
 	when
 		t : Turno (turno == Turno.SU_TURNO)
@@ -156,8 +156,7 @@ rule "Jugada contrincante válida"
 		 
 	then
         System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
-        
-        
+               
         modify (c) {setValor (Celda.EQUIS)};
 		modify (jugada) {setAnalizada (true)};
 		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
