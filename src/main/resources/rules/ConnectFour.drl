@@ -72,11 +72,9 @@ rule "Hay turno y es el suyo"
 	then
         System.out.println( "Es su turno" );
         try
-        {
-        	// modificando para mostrar el número de filas y columnas permitidos
-        	//String filStr = JOptionPane.showInputDialog("Fila [0..5]");
+        {        	
     		String colStr = JOptionPane.showInputDialog("Columna [0..6]");
-    		//if (filStr == null && colStr == null)
+    		
 			if (colStr == null)
 	   		{
     			System.out.println ("Partida terminada por el usuario");
@@ -135,11 +133,7 @@ rule "Jugada contrincante válida en fondo"
                
         modify (c) {setValor (Celda.EQUIS)};
 		modify (jugada) {setAnalizada (true)};
-		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
-		//$f=$f+1;
-		//System.out.println(" minuevof"+$f);
-				
-        modify (t) {setTurno (Turno.MI_TURNO)};
+		modify (t) {setTurno (Turno.MI_TURNO)};
 end
 
 
@@ -440,11 +434,6 @@ rule "Hay turno y es el mío y bloquear al otro vertical"
 	salience 15
 	when
 		t : Turno (turno == Turno.MI_TURNO)
-		//c1 : Celda ($col : j, $f:i, valor == Celda.EQUIS)
-		//c2 : Celda (c2 != c1, $col == j, $col2 : j, valor == Celda.EQUIS)
-		//c3 : Celda (c3 != c1, c3 != c2, $col == j, $col3 : j, valor == Celda.EQUIS)
-		//c4 : Celda (c4 != c1, c4 != c2, c4 != c3, $col == j, $col4 : j, $f == i+1, valor == Celda.NADA)
-		//c4 : Celda ($f==i+1,$f4:i+1,c4 != c1, c4 != c3,c4!=c2, $col == j, $col4 : j, valor == Celda.NADA)
 		c1 : Celda ($col1 : j, $fil1 : i, valor == Celda.EQUIS)
 		c2 : Celda (c2 != c1, $col1 == j, $col2 : j, $fil2 : i, valor == Celda.EQUIS)
 		c3 : Celda (c3 != c1, c3 != c2, $col1 == j, $col3 : j, $fil3 : i, valor == Celda.EQUIS)
@@ -634,8 +623,7 @@ rule "Hay turno y es el mío y poner horizontal consecutiva"
 		c1 : Celda ($col1 : j,$f : i, valor == Celda.OES)
 		c2 : Celda (c2 != c1, $f == i, $col2 :j, valor == Celda.NADA)
 		c3 : Celda ($f3 : i, $c3 : j, valor != Celda.NADA)
-		//c3 : Celda (c3 != c1, c3 != c2, $f == i, $col3 : j, valor == Celda.OES)
-		//c4 : Celda (c4 != c1, c4!=c2, c4 != c3,$f == i, $col4 : j, valor == Celda.NADA)
+		
 					
 		// Son consecutivas
 	eval ($col2 == $col1+1 && $c3 == $col2 && $f3 == $f+1 
@@ -655,9 +643,6 @@ rule "Hay turno y es el mío y poner diagonal consecutivas"
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($f1 : i, $c1 : j, $d11 : (i - j), $d12 : (i + j), valor == Celda.OES)
 		c2 : Celda ($f2 : i, $c2 : j, $d21 : (i - j), $d22 : (i + j), valor == Celda.NADA)
-		//c3 : Celda ($f3 : i, $c3 : j, $d31 : (i - j), $d32 : (i + j), valor == Celda.OES)
-		//c31: Celda ($c3== j+3, $f3==i+2, $f31 : i-2, $c31 : j+3, $v3:valor)
-		//c4 : Celda ($f4 : i, $c4 : j, $d41 : (i - j), $d42 : (i + j), valor == Celda.NADA)
 		c3 : Celda ($f3 : i, $c3 : j, valor != Celda.NADA)
 				
 		eval (($f1 != $f2)	// No están en la misma fila
