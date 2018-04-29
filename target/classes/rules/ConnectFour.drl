@@ -68,12 +68,7 @@ end
 rule "Hay turno y es el suyo"
 	when
 		t : Turno (turno == Turno.SU_TURNO)
-		//c0 : Celda (i == $f, j == $c, valor == Celda.NADA)
-		//c1 : Celda (i == $f-1, j == $c)
-		//c2 : Celda (i == $f-2, j == $c)
-		//c3 : Celda (i == $f-3, j == $c)
-		//c4 : Celda (i == $f-4, j == $c)
-		//not Celda (valor != Celda.NADA)
+		
 	then
         System.out.println( "Es su turno" );
         try
@@ -90,11 +85,9 @@ rule "Hay turno y es el suyo"
     		}
     		else
     		{
-	    		//int f = Integer.parseInt (filStr);
 	    		int f = 5;
 				int c = Integer.parseInt (colStr);
-				//if (f >= 0 && f < 3 && c >= 0 && c < 3)
-				
+								
 				if (c >= 0 && c < 7)
 				{
 					//Celda celda = new Celda(f,c);
@@ -102,9 +95,7 @@ rule "Hay turno y es el suyo"
         			System.out.println(jugada.getFila()+ " " + jugada.getCol() + " esta es la jugada");
         			
         			insert (jugada);
-        			
-        			
-				}
+        		}
 				else
 				{
 		      		JOptionPane.showMessageDialog (null, "Jugada inválida", "ERROR", JOptionPane.ERROR_MESSAGE);	
@@ -138,9 +129,7 @@ rule "Jugada contrincante válida en fondo"
 		t : Turno (turno == Turno.SU_TURNO)
 		jugada : Jugada ($f : fila, $c : col, analizada == false)
 		c : Celda (i == $f, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
-		 
+				 
 	then
         System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
                
@@ -160,20 +149,14 @@ rule "Jugada contrincante válida 2"
 		t : Turno (turno == Turno.SU_TURNO)
 		jugada : Jugada ($f : fila, $c : col, analizada == false)
 		c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
-		 
+				 
 	then
         System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
         
         
         modify (c) {setValor (Celda.EQUIS)};
 		modify (jugada) {setAnalizada (true)};
-		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
-		//$f=$f+1;
-		//System.out.println(" minuevof"+$f);
-				
-        modify (t) {setTurno (Turno.MI_TURNO)};
+		modify (t) {setTurno (Turno.MI_TURNO)};
 end
 
 
@@ -183,17 +166,12 @@ rule "Jugada contrincante válida 3"
 		t : Turno (turno == Turno.SU_TURNO)
 		jugada : Jugada ($f : fila, $c : col, analizada == false)
 		c : Celda (i == $f-2, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
-		 
+		
 	then
         System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
               
         modify (c) {setValor (Celda.EQUIS)};
 		modify (jugada) {setAnalizada (true)};
-		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
-		//$f=$f+1;
-		//System.out.println(" minuevof"+$f);
 		modify (t) {setTurno (Turno.MI_TURNO)};
 end
 
@@ -203,20 +181,14 @@ rule "Jugada contrincante válida 4"
 		t : Turno (turno == Turno.SU_TURNO)
 		jugada : Jugada ($f : fila, $c : col, analizada == false)
 		c : Celda (i == $f-3, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
-		 
+				 
 	then
         System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
         
         
         modify (c) {setValor (Celda.EQUIS)};
 		modify (jugada) {setAnalizada (true)};
-		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
-		//$f=$f+1;
-		//System.out.println(" minuevof"+$f);
-				
-        modify (t) {setTurno (Turno.MI_TURNO)};
+	    modify (t) {setTurno (Turno.MI_TURNO)};
 end
 
 rule "Jugada contrincante válida 5"
@@ -225,19 +197,12 @@ rule "Jugada contrincante válida 5"
 		t : Turno (turno == Turno.SU_TURNO)
 		jugada : Jugada ($f : fila, $c : col, analizada == false)
 		c : Celda (i == $f-4, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
-		 
+	 
 	then
         System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
-        
-        
+              
         modify (c) {setValor (Celda.EQUIS)};
 		modify (jugada) {setAnalizada (true)};
-		//System.out.println( " Esta es la celda" + " " + c.getValor()+" "+c.getI()+c.getJ()+"bb"+$f+$c);
-		//$f=$f+1;
-		//System.out.println(" minuevof"+$f);
-				
         modify (t) {setTurno (Turno.MI_TURNO)};
 end
 
@@ -247,13 +212,9 @@ rule "Jugada contrincante válida 6"
 		t : Turno (turno == Turno.SU_TURNO)
 		jugada : Jugada ($f : fila, $c : col, analizada == false)
 		c : Celda (i == $f-5, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f-1, j == $c, valor == Celda.NADA)
-		//c : Celda (i == $f, j == $c, valor != Celda.NADA || valor == Celda.NADA)
-		 
+				 
 	then
         System.out.println( "Jugada del contrincante en  (" + $f + ", " + $c + ")");
-        
-        
         modify (c) {setValor (Celda.EQUIS)};
 		modify (jugada) {setAnalizada (true)};
 		modify (t) {setTurno (Turno.MI_TURNO)};
@@ -263,15 +224,13 @@ rule "Primera Jugada en mi turno"
 	salience 10
 	when
 		t : Turno (turno == Turno.MI_TURNO)
-		//c : Celda (valor == Celda.NADA)
 		c : Celda ($f : 5, $c : 3, valor == Celda.NADA)
 		c1: Celda(i == $f, j==$c, valor == Celda.NADA)
 		
 	then
-        System.out.println("Juego en una celda desocupada: " + c.toString());
+        System.out.println("Juego en el centro: " + c.toString());
         System.out.println(" PRUEBA " + $f);
         System.out.println("inicio jugada");
-       
         modify (c1) {setValor (Celda.OES)};
         modify (t) {setTurno (Turno.SU_TURNO)};
 end 
@@ -280,7 +239,6 @@ rule "Hay turno y es el mio y hay espacio desocupado"
 	salience 9
 	when
 		t : Turno (turno == Turno.MI_TURNO)
-		//c : Celda (valor == Celda.NADA)
 		c : Celda ($f : i, $c : j, valor == Celda.NADA)
 		c1: Celda(i == $f+5, j==$c, valor == Celda.NADA)
 		
@@ -297,7 +255,6 @@ rule "Hay turno y es el mio y hay espacio desocupado 2"
 	salience 8
 	when
 		t : Turno (turno == Turno.MI_TURNO)
-		//c : Celda (valor == Celda.NADA)
 		c : Celda ($f : i, $c : j, valor == Celda.NADA)
 		c1: Celda(i == $f+4, j==$c, valor == Celda.NADA)
 		
@@ -315,7 +272,6 @@ rule "Hay turno y es el mio y hay espacio desocupado 3"
 	salience 7
 	when
 		t : Turno (turno == Turno.MI_TURNO)
-		//c : Celda (valor == Celda.NADA)
 		c : Celda ($f : i, $c : j, valor == Celda.NADA)
 		c1: Celda(i == $f+3, j==$c, valor == Celda.NADA)
 		
@@ -332,7 +288,6 @@ rule "Hay turno y es el mio y hay espacio desocupado 4"
 	salience 6
 	when
 		t : Turno (turno == Turno.MI_TURNO)
-		//c : Celda (valor == Celda.NADA)
 		c : Celda ($f : i, $c : j, valor == Celda.NADA)
 		c1: Celda(i == $f+2, j==$c, valor == Celda.NADA)
 		
@@ -349,7 +304,6 @@ rule "Hay turno y es el mio y hay espacio desocupado 5"
 	salience 5
 	when
 		t : Turno (turno == Turno.MI_TURNO)
-		//c : Celda (valor == Celda.NADA)
 		c : Celda ($f : i, $c : j, valor == Celda.NADA)
 		c1: Celda(i == $f+1, j==$c, valor == Celda.NADA)
 		
@@ -366,7 +320,6 @@ rule "Hay turno y es el mio y hay espacio desocupado 6"
 	salience 4
 	when
 		t : Turno (turno == Turno.MI_TURNO)
-		//c : Celda (valor == Celda.NADA)
 		c : Celda ($f : i, $c : j, valor == Celda.NADA)
 		c1: Celda(i == $f, j==$c, valor == Celda.NADA)
 		
@@ -381,7 +334,7 @@ end
 
 
 
-/// Reglas para establecer la terminación del juego
+ /// REGLAS PARA ESTABLECER LA TERMINACIÖN DEL JUEGO
 
 rule "Termina el juego por ganar en vertical"
 	salience 20
@@ -612,14 +565,28 @@ end
 
 // REGLAS PARA ACUMULAR FICHAS DE MANERA CONSECUTIVA
 
+rule "Hay turno y es el mio y pongo ficha encima de la del contrincante"
+	salience 12
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($col1 : j, $fil1 : i, valor == Celda.EQUIS)
+		c2 : Celda (c2 != c1, $col1 == j, $col2 : j, $fil2 : i, valor == Celda.NADA)
+		
+		// Son consecutivas
+	eval ($fil2 == $fil1+1 || $fil2 == $fil1-1) 
+	then
+        System.out.println( "Poniendo consecutiva vertical en " + c2.toString ());
+        modify (c2) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end 
+
 rule "Hay turno y es el mio y poner vertical consecutiva"
 	salience 12
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($col1 : j, $fil1 : i, valor == Celda.OES)
 		c2 : Celda (c2 != c1, $col1 == j, $col2 : j, $fil2 : i, valor == Celda.NADA)
-		//c3 : Celda (c3 != c1, c3 != c2, $col1 == j, $col3 : j, $fil3 : i, valor == Celda.OES)
-		//c4 : Celda (c4 != c1, c4 != c2, c4 != c3, $col1 == j, $col4 : j, $fil4 : i, valor == Celda.NADA)
+		
 		// Son consecutivas
 	eval ($fil2 == $fil1+1 || $fil2 == $fil1-1) 
 	then
