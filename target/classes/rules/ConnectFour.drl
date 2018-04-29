@@ -401,10 +401,43 @@ rule "Empate"
         modify (t) {setTurno (Turno.TERMINAR)};
 end	
 
+
+
 //BLOQUEOS - ESTRATEGIA DE JUEGO  
 
+rule "Hay turno y es el mio y bloquear al otro horizontal cuando tiene dos consecutivas"
+	salience 14
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($col1 : j,$f : i, valor == Celda.NADA)
+		c2 : Celda (c2 != c1, $f == i, $col2 :j, valor == Celda.EQUIS)
+		c3 : Celda (c3 != c1, c3 != c2, $f == i, $col3 : j, valor == Celda.EQUIS)
+		c4 : Celda (c4 != c1, c4!=c2, c4 != c3,$f == i, $col4 : j, valor == Celda.NADA)
+		c5 : Celda ($f5 : i, $c5 : j, valor != Celda.NADA)
+		
+		//c4 : Celda ($col==j+1,$col4:j+1,c4 != c1, c4!=c2, c4 != c3,$f == i, valor == Celda.NADA)
+						
+		// Son consecutivas
+	eval ($col2 == $col1+1 && $col3 == $col1+2 && $col4 == $col1+3 && $c5 == $col4 && $f5 == $f+1 
+		 || $col2 == $col1-1 && $col3 == $col1-2 && $col4 == $col1-3 && $c5 == $col4 && $f5 == $f+1
+		 || $col2 == $col1+1 && $col3 == $col1+2 && $col4 == $col1+3 && $f == 5
+		 || $col2 == $col1-1 && $col3 == $col1-2 && $col4 == $col1-3 && $f == 5 )	
+						
+	then
+		//System.out.println("HHHHHHH AAAAAA");
+		System.out.println( c1.toString());
+		System.out.println( c2.toString());
+		System.out.println( c3.toString());
+        System.out.println( "Bloqueando jugada horizontal en  " + c4.toString ());
+        modify (c4) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end 
+
+
+
+
 rule "Hay turno y es el mio y bloquear al otro vertical 1"
-	salience 13
+	salience 15
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		//c1 : Celda ($col : j, $f:i, valor == Celda.EQUIS)
@@ -433,7 +466,7 @@ end
 
 
 rule "Hay turno y es el mio y bloquear al otro horizontal 1"
-	salience 13
+	salience 15
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($col1 : j,$f : i, valor == Celda.EQUIS)
@@ -443,8 +476,7 @@ rule "Hay turno y es el mio y bloquear al otro horizontal 1"
 		c5 : Celda ($f5 : i, $c5 : j, valor != Celda.NADA)
 		
 		//c4 : Celda ($col==j+1,$col4:j+1,c4 != c1, c4!=c2, c4 != c3,$f == i, valor == Celda.NADA)
-		
-				
+						
 		// Son consecutivas
 	eval ($col2 == $col1+1 && $col3 == $col1+2 && $col4 == $col1+3 && $c5 == $col4 && $f5 == $f+1 
 		 || $col2 == $col1-1 && $col3 == $col1-2 && $col4 == $col1-3 && $c5 == $col4 && $f5 == $f+1
@@ -462,7 +494,7 @@ rule "Hay turno y es el mio y bloquear al otro horizontal 1"
 end    
 
 rule "Hay turno y es el mío y bloquear al otro diagonal"
-	salience 13
+	salience 15
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($f1 : i, $c1 : j, $d11 : (i - j), $d12 : (i + j), valor == Celda.EQUIS)
@@ -483,7 +515,6 @@ rule "Hay turno y es el mío y bloquear al otro diagonal"
 		System.out.println( c1.toString());
 		System.out.println( c2.toString());
 		System.out.println( c3.toString());
-		//System.out.println( c31.toString());
 		System.out.println( c4.toString());
 		System.out.println( c5.toString());
 
@@ -492,10 +523,16 @@ rule "Hay turno y es el mío y bloquear al otro diagonal"
         modify (t) {setTurno (Turno.SU_TURNO)};
 end
 
+
+
+
+
+
+
 //ESTRATEGIA, REGLAS PARA GANAR APENAS SEA POSIBLE
 
 rule "Hay turno y es el mio y ganar vertical"
-	salience 14
+	salience 16
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($col1 : j, $fil1 : i, valor == Celda.OES)
@@ -513,7 +550,7 @@ end
 
 
 rule "Hay turno y es el mio y ganar horizontal"
-	salience 14
+	salience 16
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 			
@@ -540,7 +577,7 @@ end
 
 
 rule "Hay turno y es el mio y ganar con la diagonal"
-	salience 14
+	salience 16
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($f1 : i, $c1 : j, $d11 : (i - j), $d12 : (i + j), valor == Celda.OES)
@@ -575,7 +612,7 @@ rule "Hay turno y es el mio y pongo ficha encima de la del contrincante"
 		// Son consecutivas
 	eval ($fil2 == $fil1+1 || $fil2 == $fil1-1) 
 	then
-        System.out.println( "Poniendo consecutiva vertical en " + c2.toString ());
+        System.out.println( "Poniendo ficha encima del contrincante en " + c2.toString ());
         modify (c2) {setValor (Celda.OES)};
         modify (t) {setTurno (Turno.SU_TURNO)};
 end 
