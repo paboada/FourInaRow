@@ -649,7 +649,7 @@ rule "Hay turno y es el mío y poner horizontal consecutiva"
         modify (t) {setTurno (Turno.SU_TURNO)};
 end 
 
-rule "Hay turno y es el mío y poner diagonal consecutiva"
+rule "Hay turno y es el mío y poner diagonal consecutivas"
 	salience 12
 	when
 		t : Turno (turno == Turno.MI_TURNO)
