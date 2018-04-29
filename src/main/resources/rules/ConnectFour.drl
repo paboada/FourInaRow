@@ -384,7 +384,7 @@ end
 /// Reglas para establecer la terminación del juego
 
 rule "Termina el juego por ganar en vertical"
-	salience 11
+	salience 20
 	when
 		t : Turno (turno != Turno.TERMINAR)
 		c1 : Celda ($c : j, $val : valor, $fil1 : i && valor != Celda.NADA)
@@ -397,7 +397,7 @@ rule "Termina el juego por ganar en vertical"
 end
 
 rule "Termina el juego por ganar en horizontal"
-	salience 11
+	salience 20
 	when
 		t : Turno (turno != Turno.TERMINAR)
 		c1 : Celda ($f : i, $val : valor, $col1 : j, valor != Celda.NADA)
@@ -412,7 +412,7 @@ end
 
 
 rule "Termina el juego por ganar en diagonal"
-	salience 11
+	salience 20
 	when
 		t : Turno (turno != Turno.TERMINAR)
 		c1 : Celda ($f1 : i, $c1 : j, $d11 : (i - j), $d12 : (i + j), $val : valor, valor != Celda.NADA)
@@ -438,7 +438,7 @@ rule "Termina el juego por ganar en diagonal"
 end 
 
 rule "Empate"
-	salience 20
+	salience 21
 	
 	when
 		t : Turno (turno != Turno.TERMINAR)
@@ -451,7 +451,7 @@ end
 //BLOQUEOS - ESTRATEGIA DE JUEGO  
 
 rule "Hay turno y es el mio y bloquear al otro vertical 1"
-	salience 10
+	salience 13
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		//c1 : Celda ($col : j, $f:i, valor == Celda.EQUIS)
@@ -480,19 +480,23 @@ end
 
 
 rule "Hay turno y es el mio y bloquear al otro horizontal 1"
-	salience 10
+	salience 13
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($col1 : j,$f : i, valor == Celda.EQUIS)
 		c2 : Celda (c2 != c1, $f == i, $col2 :j, valor == Celda.EQUIS)
 		c3 : Celda (c3 != c1, c3 != c2, $f == i, $col3 : j, valor == Celda.EQUIS)
 		c4 : Celda (c4 != c1, c4!=c2, c4 != c3,$f == i, $col4 : j, valor == Celda.NADA)
+		c5 : Celda ($f5 : i, $c5 : j, valor != Celda.NADA)
+		
 		//c4 : Celda ($col==j+1,$col4:j+1,c4 != c1, c4!=c2, c4 != c3,$f == i, valor == Celda.NADA)
 		
 				
 		// Son consecutivas
-	eval ($col2 == $col1+1 && $col3 == $col1+2 && $col4 == $col1+3 || $col2 == $col1-1 && $col3 == $col1-2 && $col4 == $col1-3) 
-		
+	eval ($col2 == $col1+1 && $col3 == $col1+2 && $col4 == $col1+3 && $c5 == $col4 && $f5 == $f+1 
+		 || $col2 == $col1-1 && $col3 == $col1-2 && $col4 == $col1-3 && $c5 == $col4 && $f5 == $f+1
+		 || $col2 == $col1+1 && $col3 == $col1+2 && $col4 == $col1+3 && $f == 5
+		 || $col2 == $col1-1 && $col3 == $col1-2 && $col4 == $col1-3 && $f == 5 )	
 						
 	then
 		//System.out.println("HHHHHHH AAAAAA");
@@ -505,7 +509,7 @@ rule "Hay turno y es el mio y bloquear al otro horizontal 1"
 end    
 
 rule "Hay turno y es el mío y bloquear al otro diagonal"
-	salience 10
+	salience 13
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($f1 : i, $c1 : j, $d11 : (i - j), $d12 : (i + j), valor == Celda.EQUIS)
@@ -519,7 +523,7 @@ rule "Hay turno y es el mío y bloquear al otro diagonal"
 			&& ($c1 != $c2 && $c1 != $c3 && $c1 != $c4 && $c2 != $c3 && $c2 != $c4 && $c3 != $c4)	// No están en la misma columna
 			&& ($d11 == $d21 && $d11 == $d31 && $d11 == $d41 || $d12 == $d22 && $d22 == $d32 && $d32 == $d42) // Están en la misma diagonal
 			&& ($c2 == $c1+1 && $c3 == $c1+2 && $c4 == $c1+3 || $c2 == $c1-1 && $c3 == $c1-2 && $c4 == $c1-3)
-			&& ($c5 == $c3 - 1 && $f5 == $f4 + 1 || $c5 == $c3 + 1 && $f5 == $f4 + 1))
+			&& ($c5 == $c4 && $f5 == $f4 + 1 || $c5 == $c4 && $f5 == $f4 + 1))
 			//&& ($v3 !=Celda.NADA)) 
 	then
 		System.out.println("HHHHHHH AAAAAA");
@@ -535,10 +539,10 @@ rule "Hay turno y es el mío y bloquear al otro diagonal"
         modify (t) {setTurno (Turno.SU_TURNO)};
 end
 
-//Reglas para ganar apenas sea posible
+//ESTRATEGIA, REGLAS PARA GANAR APENAS SEA POSIBLE
 
 rule "Hay turno y es el mio y ganar vertical"
-	salience 11
+	salience 14
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($col1 : j, $fil1 : i, valor == Celda.OES)
@@ -556,7 +560,7 @@ end
 
 
 rule "Hay turno y es el mio y ganar horizontal"
-	salience 11
+	salience 14
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 			
@@ -564,12 +568,17 @@ rule "Hay turno y es el mio y ganar horizontal"
 		c2 : Celda (c2 != c1, $f == i, $col2 :j, valor == Celda.OES)
 		c3 : Celda (c3 != c1, c3 != c2, $f == i, $col3 : j, valor == Celda.OES)
 		c4 : Celda (c4 != c1, c4!=c2, c4 != c3,$f == i, $col4 : j, valor == Celda.NADA)
+		c5 : Celda ($f5 : i, $c5 : j, valor != Celda.NADA)
 					
 		// Son consecutivas
-	eval ($col2 == $col1+1 && $col3 == $col1+2 && $col4 == $col1+3 
-		 || $col2 == $col1-1 && $col3 == $col1-2 && $col4 == $col1-3) 
+	eval ($col2 == $col1+1 && $col3 == $col1+2 && $col4 == $col1+3 && $c5 == $col4 && $f5 == $f+1 
+		 || $col2 == $col1-1 && $col3 == $col1-2 && $col4 == $col1-3 && $c5 == $col4 && $f5 == $f+1
+		 || $col2 == $col1+1 && $col3 == $col1+2 && $col4 == $col1+3 && $f == 5
+		 || $col2 == $col1-1 && $col3 == $col1-2 && $col4 == $col1-3 && $f == 5 )
+		 //&& ($c5 == $col4 && $f5 == $f+1)) 
 	
 	then
+		System.out.println( "c5 " + c5.toString ());
         System.out.println( "Haciendo cuatro en línea horizontal en " + c4.toString ());
         modify (c4) {setValor (Celda.OES)};
         modify (t) {setTurno (Turno.SU_TURNO)};
@@ -578,7 +587,7 @@ end
 
 
 rule "Hay turno y es el mio y ganar con la diagonal"
-	salience 11
+	salience 14
 	when
 		t : Turno (turno == Turno.MI_TURNO)
 		c1 : Celda ($f1 : i, $c1 : j, $d11 : (i - j), $d12 : (i + j), valor == Celda.OES)
@@ -592,13 +601,75 @@ rule "Hay turno y es el mio y ganar con la diagonal"
 			&& ($c1 != $c2 && $c1 != $c3 && $c1 != $c4 && $c2 != $c3 && $c2 != $c4 && $c3 != $c4)	// No están en la misma columna
 			&& ($d11 == $d21 && $d11 == $d31 && $d11 == $d41 || $d12 == $d22 && $d22 == $d32 && $d32 == $d42) // Están en la misma diagonal
 			&& ($c2 == $c1+1 && $c3 == $c1+2 && $c4 == $c1+3 || $c2 == $c1-1 && $c3 == $c1-2 && $c4 == $c1-3)
-			&& ($c5 == $c3 - 1 && $f5 == $f4 + 1 || $c5 == $c3 + 1 && $f5 == $f4 + 1))
+			&& ($c5 == $c4 && $f5 == $f4 + 1 || $c5 == $c4 && $f5 == $f4 + 1))
 			//&& ($v3 !=Celda.NADA)) 
 	then
         System.out.println( "Cuatro en línea en diagonal en " + c4.toString ());
         modify (c4) {setValor (Celda.OES)};
         modify (t) {setTurno (Turno.SU_TURNO)};
 end    
+
+
+// REGLAS PARA ACUMULAR FICHAS DE MANERA CONSECUTIVA
+
+rule "Hay turno y es el mio y poner vertical consecutiva"
+	salience 12
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($col1 : j, $fil1 : i, valor == Celda.OES)
+		c2 : Celda (c2 != c1, $col1 == j, $col2 : j, $fil2 : i, valor == Celda.NADA)
+		//c3 : Celda (c3 != c1, c3 != c2, $col1 == j, $col3 : j, $fil3 : i, valor == Celda.OES)
+		//c4 : Celda (c4 != c1, c4 != c2, c4 != c3, $col1 == j, $col4 : j, $fil4 : i, valor == Celda.NADA)
+		// Son consecutivas
+	eval ($fil2 == $fil1+1 || $fil2 == $fil1-1) 
+	then
+        System.out.println( "Poniendo consecutiva vertical en " + c2.toString ());
+        modify (c2) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end 
+
+rule "Hay turno y es el mio y poner horizontal consecutiva"
+	salience 12
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+			
+		c1 : Celda ($col1 : j,$f : i, valor == Celda.OES)
+		c2 : Celda (c2 != c1, $f == i, $col2 :j, valor == Celda.NADA)
+		//c3 : Celda (c3 != c1, c3 != c2, $f == i, $col3 : j, valor == Celda.OES)
+		//c4 : Celda (c4 != c1, c4!=c2, c4 != c3,$f == i, $col4 : j, valor == Celda.NADA)
+					
+		// Son consecutivas
+	eval ($col2 == $col1+1 || $col2 == $col1-1) 
+	
+	then
+        System.out.println( "Poniendo consecutiva horizontal en " + c2.toString ());
+        modify (c2) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end 
+
+rule "Hay turno y es el mio y poner diagonal consecutiva"
+	salience 12
+	when
+		t : Turno (turno == Turno.MI_TURNO)
+		c1 : Celda ($f1 : i, $c1 : j, $d11 : (i - j), $d12 : (i + j), valor == Celda.OES)
+		c2 : Celda ($f2 : i, $c2 : j, $d21 : (i - j), $d22 : (i + j), valor == Celda.NADA)
+		//c3 : Celda ($f3 : i, $c3 : j, $d31 : (i - j), $d32 : (i + j), valor == Celda.OES)
+		//c31: Celda ($c3== j+3, $f3==i+2, $f31 : i-2, $c31 : j+3, $v3:valor)
+		//c4 : Celda ($f4 : i, $c4 : j, $d41 : (i - j), $d42 : (i + j), valor == Celda.NADA)
+		c3 : Celda ($f3 : i, $c3 : j, valor != Celda.NADA)
+				
+		eval (($f1 != $f2)	// No están en la misma fila
+			&& ($c1 != $c2 )	// No están en la misma columna
+			&& ($d11 == $d21 || $d12 == $d22) // Están en la misma diagonal
+			&& ($c2 == $c1+1 || $c2 == $c1-1)
+			&& ($c3 == $c1 - 1 && $f3 == $f1 || $c3 == $c1 + 1 && $f3 == $f1))
+			//&& ($v3 !=Celda.NADA)) 
+	then
+        System.out.println( "Poniendo conscutivo en diagonal en " + c2.toString ());
+        modify (c2) {setValor (Celda.OES)};
+        modify (t) {setTurno (Turno.SU_TURNO)};
+end
+
 
 
 
